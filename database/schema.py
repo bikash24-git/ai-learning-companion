@@ -94,15 +94,27 @@ def add_file_record(filename: str, file_type: str, file_size: int, content_previ
     """Add a file record to the database."""
     conn = get_connection()
     cursor = conn.cursor()
-    
+
     try:
+        # Check if file already exists
+        cursor.execute(
+            "SELECT id FROM files WHERE filename = ?",
+            (filename,)
+        )
+
+        existing = cursor.fetchone()
+
+        if existing:
+            return existing["id"]
+
         cursor.execute("""
             INSERT INTO files (filename, file_type, file_size, content_preview)
             VALUES (?, ?, ?, ?)
         """, (filename, file_type, file_size, content_preview))
+
         conn.commit()
-        file_id = cursor.lastrowid
-        return file_id
+        return cursor.lastrowid
+
     finally:
         conn.close()
 
