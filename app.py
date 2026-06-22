@@ -109,32 +109,31 @@ def display_sidebar():
                     extracted_text = extractor.extract_text(file_path, file_type)
                     file_size = extractor.get_file_size(file_path)
                     preview = extractor.get_text_preview(extracted_text)
-                    
+
                     # Prevent duplicate inserts when Streamlit reruns
-if (
-    st.session_state.current_file is None
-    or st.session_state.current_file.get("name") != uploaded_file.name
-):
-    file_id = add_file_record(
-        uploaded_file.name,
-        file_type,
-        file_size,
-        preview
-    )
+                    if (
+                        st.session_state.current_file is None
+                        or st.session_state.current_file.get("name") != uploaded_file.name
+                    ):
+                        file_id = add_file_record(
+                            uploaded_file.name,
+                            file_type,
+                            file_size,
+                            preview
+                        )
 
-    st.session_state.current_file = {
-        'id': file_id,
-        'name': uploaded_file.name,
-        'type': file_type,
-        'text': extracted_text,
-        'size': file_size
-    }
-else:
-    file_id = st.session_state.current_file['id']
-
-st.session_state.extracted_text = extracted_text
+                        st.session_state.current_file = {
+                            'id': file_id,
+                            'name': uploaded_file.name,
+                            'type': file_type,
+                            'text': extracted_text,
+                            'size': file_size
+                        }
+                    else:
+                        file_id = st.session_state.current_file['id']
+            
                     st.session_state.extracted_text = extracted_text
-                    
+            
                     st.success("✅ Text extracted successfully!")
             
             except Exception as e:
