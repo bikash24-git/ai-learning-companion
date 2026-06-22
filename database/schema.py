@@ -90,13 +90,13 @@ def initialize_database():
     conn.close()
 
 
-def add_file_record(filename, file_type, file_size, content_preview=""):
+def add_file_record(filename: str, file_type: str, file_size: int, content_preview: str = "") -> int:
     conn = get_connection()
     cursor = conn.cursor()
 
     try:
         cursor.execute(
-            "SELECT id FROM files WHERE filename=?",
+            "SELECT id FROM files WHERE filename = ?",
             (filename,)
         )
 
