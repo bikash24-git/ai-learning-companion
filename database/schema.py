@@ -90,15 +90,13 @@ def initialize_database():
     conn.close()
 
 
-def add_file_record(filename: str, file_type: str, file_size: int, content_preview: str = "") -> int:
-    """Add a file record to the database."""
+def add_file_record(filename, file_type, file_size, content_preview=""):
     conn = get_connection()
     cursor = conn.cursor()
 
     try:
-        # Check if file already exists
         cursor.execute(
-            "SELECT id FROM files WHERE filename = ?",
+            "SELECT id FROM files WHERE filename=?",
             (filename,)
         )
 
@@ -108,7 +106,8 @@ def add_file_record(filename: str, file_type: str, file_size: int, content_previ
             return existing["id"]
 
         cursor.execute("""
-            INSERT INTO files (filename, file_type, file_size, content_preview)
+            INSERT INTO files
+            (filename, file_type, file_size, content_preview)
             VALUES (?, ?, ?, ?)
         """, (filename, file_type, file_size, content_preview))
 
